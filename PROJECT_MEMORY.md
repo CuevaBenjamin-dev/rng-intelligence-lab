@@ -114,7 +114,7 @@ No adoptar todas las tecnologías a la vez. No desplegar, conectar al cliente ni
 
 | ID | Tarea | Estado | Criterio de aceptación |
 |---|---|---|---|
-| T001 | Inicializar memoria, instrucciones y README | Archivos preparados | Revisión humana y commit inicial |
+| T001 | Inicializar memoria, instrucciones y README | Verificado: commit inicial `a0b32a9` en GitHub | Revisión humana y commit inicial |
 | T002 | Crear repositorio y entorno local | Verificado: repositorio público existente y `origin/main` configurado | Repo clonado y primer commit sincronizado |
 | T003 | Ejecutar control sintético E00 | Verificado en Python 3.14.2 local | Script reproducible y pruebas pasan en entorno local |
 | T004 | Confirmar alcance y requisitos del cliente | Pendiente | Autorización, reglas, fuentes, entorno y disponibilidad documentados |
@@ -136,7 +136,7 @@ No adoptar todas las tecnologías a la vez. No desplegar, conectar al cliente ni
 | D004 / 2026-11-25 | Mantener alcance defensivo y no buscar confirmar una vulnerabilidad | Validez científica e imparcialidad | Propuesto como requisito de trabajo |
 | D005 / 2026-11-25 | Separar PROJECT_MEMORY.md de AGENTS.md | Memoria de hechos frente a reglas de trabajo | Propuesto |
 | D006 / 2026-11-25 | E01 con biblioteca estándar, sesgo fijo P(1)=0.08, 100×3600 por escenario y chi-cuadrado a α=0.05 | Control reproducible con valor esperado 100 por categoría y sin dependencias nuevas | Implementado y verificado localmente; no extrapolable al cliente |
-| D007 / 2026-11-25 | Publicar E01 sintético en el repositorio público existente | Autorización expresa del responsable técnico tras verificar la visibilidad en GitHub | Aprobado; no incluye datos del cliente ni secretos |
+| D007 / 2026-11-25 | Publicar E01 sintético en el repositorio público existente | Autorización expresa del responsable técnico tras verificar la visibilidad en GitHub | Publicado en `main`; no incluye datos del cliente ni secretos |
 
 Para cambios importantes registrar contexto, alternativas, decisión, consecuencias, evidencia y estado (propuesta/aprobada/reemplazada).
 
@@ -184,6 +184,13 @@ Cuando la memoria crezca, trasladar detalles extensos a archivos `docs/experimen
 - Comandos locales en Python 3.14.2: `python -m src.baseline` ejecutó E00 con 2.75 % de aciertos del selector uniforme y 2.80 % de la referencia de frecuencia; `python -m src.experiment_e01` obtuvo 4/100 rechazos uniformes y 100/100 sesgados; `python -m unittest discover -s tests -v` superó 13 pruebas. `git diff --check` no reportó errores; Git advirtió conversión futura de LF a CRLF en la copia de trabajo de dos documentos.
 - Alcance: solo simulación local, sin datos ni acceso al cliente. No se hizo commit, push ni despliegue.
 - Pendiente: revisión humana de E01; después, definir y desarrollar E02 sintético. El protocolo de captura y cualquier trabajo con el cliente siguen sujetos al alcance y autorización documentados en la sección 4.
+
+### 2026-11-25 — S003: publicación de E01 en GitHub
+
+- Se verificó que `CuevaBenjamin-dev/rng-intelligence-lab` es público; el responsable técnico autorizó expresamente publicar E01 en ese repositorio. La propuesta de visibilidad privada D002 quedó reemplazada por D007. No se cambió la visibilidad.
+- Se revisaron los cinco archivos incluidos y `git diff --cached --check` no reportó errores. En Python 3.14.2, `python -m unittest discover -s tests -v` superó 13 pruebas.
+- Commit E01: [`1fb94778c988053a600538065cc6611f1ddb9106`](https://github.com/CuevaBenjamin-dev/rng-intelligence-lab/commit/1fb94778c988053a600538065cc6611f1ddb9106). `git push origin main` terminó correctamente; `git ls-remote origin refs/heads/main` confirmó ese mismo hash en el remoto y la conexión de GitHub devolvió el commit.
+- Solo se publicaron código, pruebas y documentación de simulación; no hubo conexión ni datos del cliente. Próximo paso técnico: definir E02 sintético. El trabajo sobre el cliente sigue pendiente de alcance y autorización documentados.
 
 ## 13. Preguntas pendientes al cliente
 
