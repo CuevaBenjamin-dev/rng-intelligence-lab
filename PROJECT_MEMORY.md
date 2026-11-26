@@ -2,16 +2,16 @@
 
 - Versión de memoria: 0.1.0
 - Fecha de inicialización: 2026-11-25 (Perú)
-- Estado: inicialización / investigación previa a datos reales
+- Estado: controles sintéticos E00 y E01 implementados; investigación previa a datos reales
 - Responsable de decisiones: responsable técnico del proyecto
-- Repositorio propuesto: `rng-intelligence-lab` (privado; URL aún no confirmada)
+- Repositorio confirmado: `https://github.com/CuevaBenjamin-dev/rng-intelligence-lab` (público por decisión expresa del responsable técnico el 2026-11-25)
 - Fuente de verdad: versión confirmada de este archivo en Git, junto con el código, pruebas y evidencias referenciadas.
 
 ## 1. Resumen para retomar el proyecto
 
 Se investiga si un sistema de un cliente que genera enteros entre 1 y 36 puede presentar sesgos o dependencias observables que permitan anticipar sus resultados por encima de referencias estadísticas. El cliente desea evaluar la predictibilidad para reforzar el sistema. El trabajo se plantea como auditoría de seguridad e imparcialidad autorizada, no como herramienta de apuestas ni de intervención sobre usuarios reales.
 
-El responsable técnico ha indicado que podría haber reglas adaptativas vinculadas a la cantidad de espectadores y a los números que los participantes indican antes del resultado. No se ha demostrado que estas variables influyan realmente ni que exista un mecanismo adaptativo. No se han proporcionado datos históricos, código, URL, acceso al sistema, especificación del RNG ni autorización escrita con alcance verificable. No hay resultados experimentales reales. El primer hito es construir un control estadístico reproducible con datos sintéticos y definir el protocolo de captura autorizado.
+El responsable técnico ha indicado que podría haber reglas adaptativas vinculadas a la cantidad de espectadores y a los números que los participantes indican antes del resultado. No se ha demostrado que estas variables influyan realmente ni que exista un mecanismo adaptativo. No se han proporcionado datos históricos, código, URL, acceso al sistema, especificación del RNG ni autorización escrita con alcance verificable. No hay resultados experimentales reales. El primer hito es construir un control estadístico reproducible con datos sintéticos y definir el protocolo de captura autorizado. E00 y E01 ya cuentan con implementaciones locales; el protocolo de captura sigue pendiente de aprobación.
 
 ## 2. Hechos, afirmaciones e incertidumbres
 
@@ -115,11 +115,11 @@ No adoptar todas las tecnologías a la vez. No desplegar, conectar al cliente ni
 | ID | Tarea | Estado | Criterio de aceptación |
 |---|---|---|---|
 | T001 | Inicializar memoria, instrucciones y README | Archivos preparados | Revisión humana y commit inicial |
-| T002 | Crear repositorio privado y entorno local | Pendiente | Repo clonado y primer commit sincronizado |
-| T003 | Ejecutar control sintético E00 | Verificado en preparación; pendiente en PC del usuario | Script reproducible y pruebas pasan en entorno local |
+| T002 | Crear repositorio y entorno local | Verificado: repositorio público existente y `origin/main` configurado | Repo clonado y primer commit sincronizado |
+| T003 | Ejecutar control sintético E00 | Verificado en Python 3.14.2 local | Script reproducible y pruebas pasan en entorno local |
 | T004 | Confirmar alcance y requisitos del cliente | Pendiente | Autorización, reglas, fuentes, entorno y disponibilidad documentados |
 | T005 | Formalizar protocolo y tamaño muestral | Pendiente | Métricas, hipótesis y partición definidos antes de probar |
-| T006 | Implementar controles sintéticos E01/E02 | Pendiente | Señales conocidas detectadas y control uniforme interpretado correctamente |
+| T006 | Implementar controles sintéticos E01/E02 | E01 verificado localmente; E02 pendiente | Señales conocidas detectadas y control uniforme interpretado correctamente |
 | T007 | Diseñar captura y validar dataset aprobado | Bloqueado por T004 | Esquema, calidad, procedencia y tiempos comprobados |
 | T008 | Ejecutar auditoría estadística | Bloqueado por T005/T007 | Informe reproducible con incertidumbre |
 | T009 | Comparar modelos, si se justifica | Bloqueado por T008 | Evaluación fuera de muestra y comparación con referencias |
@@ -131,10 +131,12 @@ No adoptar todas las tecnologías a la vez. No desplegar, conectar al cliente ni
 | ID / fecha | Decisión | Motivo | Estado |
 |---|---|---|---|
 | D001 / 2026-11-25 | Memoria Markdown versionada | Continuidad entre humanos, ChatGPT y agentes | Solicitado por el usuario |
-| D002 / 2026-11-25 | Nombre RNG Intelligence Lab y repo privado | Identificación y confidencialidad | Propuesto; pendiente de revisión |
+| D002 / 2026-11-25 | Nombre RNG Intelligence Lab y repo privado | Identificación y confidencialidad | Nombre conservado; propuesta de visibilidad reemplazada por D007 |
 | D003 / 2026-11-25 | Python local y control sintético antes de ML | Reducir complejidad y establecer referencia | Propuesto / scaffold preparado |
 | D004 / 2026-11-25 | Mantener alcance defensivo y no buscar confirmar una vulnerabilidad | Validez científica e imparcialidad | Propuesto como requisito de trabajo |
 | D005 / 2026-11-25 | Separar PROJECT_MEMORY.md de AGENTS.md | Memoria de hechos frente a reglas de trabajo | Propuesto |
+| D006 / 2026-11-25 | E01 con biblioteca estándar, sesgo fijo P(1)=0.08, 100×3600 por escenario y chi-cuadrado a α=0.05 | Control reproducible con valor esperado 100 por categoría y sin dependencias nuevas | Implementado y verificado localmente; no extrapolable al cliente |
+| D007 / 2026-11-25 | Publicar E01 sintético en el repositorio público existente | Autorización expresa del responsable técnico tras verificar la visibilidad en GitHub | Aprobado; no incluye datos del cliente ni secretos |
 
 Para cambios importantes registrar contexto, alternativas, decisión, consecuencias, evidencia y estado (propuesta/aprobada/reemplazada).
 
@@ -144,7 +146,13 @@ No hay resultados del cliente. Las gráficas y porcentajes mostrados anteriormen
 
 ### E00 — control local
 
-Artefactos preparados: `src/baseline.py`, `tests/test_baseline.py`. Genera una secuencia uniforme sintética reproducible con un PRNG de simulación (no criptográfico), entrena una referencia de frecuencia en el segmento inicial y la compara con una selección uniforme independiente en el segmento final. No es una auditoría criptográfica. Ejecución verificada en el entorno de preparación (Python 3.13.5): `python -m src.baseline` produjo 8 000 eventos de entrenamiento y 2 000 de prueba; referencia uniforme teórica 2.78 %, selector uniforme independiente 2.75 %, referencia de frecuencia histórica 2.80 %. `python -m unittest discover -s tests -v`: 4 pruebas superadas. No se realizó inferencia estadística formal ni se probó el sistema del cliente. Repetir en el entorno local del responsable.
+Artefactos preparados: `src/baseline.py`, `tests/test_baseline.py`. Genera una secuencia uniforme sintética reproducible con un PRNG de simulación (no criptográfico), entrena una referencia de frecuencia en el segmento inicial y la compara con una selección uniforme independiente en el segmento final. No es una auditoría criptográfica. Ejecución verificada en el entorno de preparación (Python 3.13.5): `python -m src.baseline` produjo 8 000 eventos de entrenamiento y 2 000 de prueba; referencia uniforme teórica 2.78 %, selector uniforme independiente 2.75 %, referencia de frecuencia histórica 2.80 %. `python -m unittest discover -s tests -v`: 4 pruebas superadas. Repetido localmente en Python 3.14.2 el 2026-11-25 con los mismos resultados impresos. No se realizó inferencia estadística formal ni se probó el sistema del cliente.
+
+### E01 — control sintético de sesgo marginal
+
+Implementados `src/statistical_audit.py`, `src/experiment_e01.py` y `tests/test_statistical_audit.py`. Escenarios: uniforme `P(i)=1/36`; sesgado `P(1)=0.08`, `P(2..36)=0.92/35`. En cada escenario se ejecutan 100 corridas de 3600 observaciones con subsemillas distintas derivadas de una semilla maestra fija. Se calculan frecuencias absolutas y relativas por categoría, incluso las de frecuencia cero. Hipótesis nula: distribución uniforme. Estadístico de Pearson `Σ(O−E)²/E`, con `E=100` por categoría, 35 grados de libertad y α=0.05. Regla: rechazar si `χ² ≥ 49.802`. El valor `49.802`, a tres decimales, se verificó en la [tabla de cola superior del NIST/SEMATECH](https://www.itl.nist.gov/div898/handbook/eda/section3/eda3674.htm) para 35 grados de libertad y α=0.05.
+
+Ejecución local en Python 3.14.2, 2026-11-25: `python -m src.experiment_e01` produjo 4/100 rechazos (4 %) para el uniforme y 100/100 (100 %) para el sesgado. Sobre 360 000 observaciones agregadas por escenario, la categoría 1 apareció 9764 veces (2.71 %) en el uniforme y 29001 veces (8.06 %) en el sesgado. La salida del comando incluye los conteos y proporciones de las 36 categorías. Son resultados de simulación, no mediciones del cliente. Los falsos positivos del control uniforme son posibles bajo α=0.05; el 100 % observado solo describe esta alternativa y tamaño muestral. La prueba no evalúa dependencia temporal, capacidad predictiva ni seguridad criptográfica. Las corridas son seudoaleatorias reproducibles mediante distintas subsemillas.
 
 ## 11. Flujo de trabajo y actualización de la memoria
 
@@ -168,6 +176,14 @@ Cuando la memoria crezca, trasladar detalles extensos a archivos `docs/experimen
 - Control sintético E00 ejecutado en el entorno de preparación: cuatro pruebas superadas; resultados en sección 10.
 - Sin conexión al cliente; no se afirma acceso ni predictibilidad. Sin repositorio remoto confirmado.
 - Próximo paso: descargar, revisar, ejecutar control y pruebas en Windows/VS Code; crear repo privado y confirmar alcance del cliente.
+
+### 2026-11-25 — S002: E01 sintético
+
+- Implementados generadores uniforme y sesgado, frecuencias, estadístico de Pearson y repetición de 100 corridas por escenario. Se conservaron E00, las hipótesis, el objetivo final y el roadmap.
+- Valor crítico verificado en tabla NIST/SEMATECH: 49.802 para 35 grados de libertad, cola superior de 0.05. Decisión D006 registrada.
+- Comandos locales en Python 3.14.2: `python -m src.baseline` ejecutó E00 con 2.75 % de aciertos del selector uniforme y 2.80 % de la referencia de frecuencia; `python -m src.experiment_e01` obtuvo 4/100 rechazos uniformes y 100/100 sesgados; `python -m unittest discover -s tests -v` superó 13 pruebas. `git diff --check` no reportó errores; Git advirtió conversión futura de LF a CRLF en la copia de trabajo de dos documentos.
+- Alcance: solo simulación local, sin datos ni acceso al cliente. No se hizo commit, push ni despliegue.
+- Pendiente: revisión humana de E01; después, definir y desarrollar E02 sintético. El protocolo de captura y cualquier trabajo con el cliente siguen sujetos al alcance y autorización documentados en la sección 4.
 
 ## 13. Preguntas pendientes al cliente
 
